@@ -46,6 +46,8 @@ function handleLogin(e) {
   const err  = document.getElementById("login-error");
 
   if (user === "admin" && pass === "admin123") {
+
+     localStorage.setItem("vaxcare_logged_in", "true"); // ✅ ADD THIS
     err.classList.add("hidden");
     document.getElementById("page-login").classList.remove("active");
     document.getElementById("page-login").classList.add("hidden");
@@ -60,7 +62,27 @@ function handleLogin(e) {
   }
 }
 
+// ---- CHECK LOGIN ON PAGE LOAD ----
+(function checkLoginState() {
+  const isLoggedIn = localStorage.getItem("vaxcare_logged_in");
+
+  if (isLoggedIn === "true") {
+    document.getElementById("page-login").classList.remove("active");
+    document.getElementById("page-login").classList.add("hidden");
+
+    document.getElementById("page-app").classList.remove("hidden");
+    document.getElementById("page-app").classList.add("active");
+
+    refreshDashboard();
+    renderSchedule();
+    renderVaccineRefChart();
+    checkNotifications();
+  }
+})();
+
 function handleLogout() {
+
+   localStorage.removeItem("vaxcare_logged_in"); // ✅ ADD THIS
   document.getElementById("page-app").classList.remove("active");
   document.getElementById("page-app").classList.add("hidden");
   document.getElementById("page-login").classList.add("active");
