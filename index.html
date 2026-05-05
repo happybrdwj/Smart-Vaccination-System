@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VaxCare — Smart Vaccination Scheduling</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Fraunces:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ==================== LOGIN PAGE ==================== -->
+  <div id="page-login" class="page active">
+    <div class="login-bg">
+      <div class="login-blob blob1"></div>
+      <div class="login-blob blob2"></div>
+    </div>
+    <div class="login-card">
+      <div class="login-logo">
+        <span class="logo-icon">💉</span>
+        <h1>VaxCare</h1>
+        <p>Smart Vaccination Scheduling</p>
+      </div>
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="login-username" placeholder="e.g. admin" required />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="login-password" placeholder="••••••••" required />
+        </div>
+        <div id="login-error" class="error-msg hidden">Invalid credentials. Try admin / admin123</div>
+        <button type="submit" class="btn btn-primary full-width">Sign In</button>
+        <p class="login-hint">Demo: <strong>admin</strong> / <strong>admin123</strong></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MAIN APP ==================== -->
+  <div id="page-app" class="page hidden">
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-brand">
+        <span class="logo-icon">💉</span>
+        <span>VaxCare</span>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#" class="nav-link active" onclick="showSection('dashboard', this)">
+          <span class="nav-icon">🏠</span> Dashboard
+        </a></li>
+        <li><a href="#" class="nav-link" onclick="showSection('add-patient', this)">
+          <span class="nav-icon">➕</span> Add Patient
+        </a></li>
+        <li><a href="#" class="nav-link" onclick="showSection('schedule', this)">
+          <span class="nav-icon">📅</span> Schedule
+        </a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-outline" onclick="handleLogout()">🔓 Logout</button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Top Bar -->
+      <header class="topbar">
+        <div>
+          <h2 id="section-title">Dashboard</h2>
+          <p id="section-subtitle">Overview of your vaccination program</p>
+        </div>
+        <div class="topbar-right">
+          <div id="notification-bell" class="notif-bell" onclick="toggleNotifPanel()">
+            🔔 <span id="notif-count" class="badge">0</span>
+          </div>
+          <div class="user-chip">👤 Admin</div>
+        </div>
+      </header>
+
+      <!-- Notification Panel -->
+      <div id="notif-panel" class="notif-panel hidden">
+        <h4>Upcoming Reminders</h4>
+        <div id="notif-list"></div>
+      </div>
+
+      <!-- ---- DASHBOARD ---- -->
+      <section id="section-dashboard" class="section active">
+        <div class="stats-grid">
+          <div class="stat-card teal">
+            <div class="stat-icon">👶</div>
+            <div>
+              <p class="stat-label">Total Patients</p>
+              <h3 id="stat-patients">0</h3>
+            </div>
+          </div>
+          <div class="stat-card amber">
+            <div class="stat-icon">💉</div>
+            <div>
+              <p class="stat-label">Vaccines Scheduled</p>
+              <h3 id="stat-vaccines">0</h3>
+            </div>
+          </div>
+          <div class="stat-card rose">
+            <div class="stat-icon">⏰</div>
+            <div>
+              <p class="stat-label">Due This Month</p>
+              <h3 id="stat-due">0</h3>
+            </div>
+          </div>
+          <div class="stat-card indigo">
+            <div class="stat-icon">✅</div>
+            <div>
+              <p class="stat-label">Completed</p>
+              <h3 id="stat-completed">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <h3 class="card-title">📋 Recent Patients</h3>
+            <div id="recent-patients-list">
+              <p class="empty-msg">No patients added yet.</p>
+            </div>
+          </div>
+          <div class="card">
+            <h3 class="card-title">⚠️ Upcoming Reminders</h3>
+            <div id="dashboard-reminders">
+              <p class="empty-msg">No upcoming vaccinations.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---- ADD PATIENT ---- -->
+      <section id="section-add-patient" class="section hidden">
+        <div class="card form-card">
+          <h3 class="card-title">👶 Register New Patient</h3>
+          <form id="patient-form" onsubmit="handleAddPatient(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Patient Name *</label>
+                <input type="text" id="p-name" placeholder="Full name" required />
+              </div>
+              <div class="form-group">
+                <label>Age (months) *</label>
+                <input type="number" id="p-age" placeholder="e.g. 0, 6, 12, 24" min="0" max="216" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Parent / Guardian</label>
+                <input type="text" id="p-parent" placeholder="Parent name" />
+              </div>
+              <div class="form-group">
+                <label>Contact Number</label>
+                <input type="tel" id="p-contact" placeholder="+91 XXXXX XXXXX" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Date of Birth *</label>
+              <input type="date" id="p-dob" required />
+            </div>
+            <div class="form-group">
+              <label>Additional Notes</label>
+              <textarea id="p-notes" rows="3" placeholder="Any allergies, medical notes..."></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn-outline" onclick="clearForm()">Clear</button>
+              <button type="submit" class="btn btn-primary">➕ Add Patient & Generate Schedule</button>
+            </div>
+          </form>
+          <div id="form-success" class="success-banner hidden">
+            ✅ Patient added successfully! Schedule has been generated.
+          </div>
+        </div>
+      </section>
+
+      <!-- ---- SCHEDULE ---- -->
+      <section id="section-schedule" class="section hidden">
+        <div class="card">
+          <div class="schedule-header">
+            <h3 class="card-title">📅 Vaccination Schedule</h3>
+            <div class="filter-bar">
+              <input type="text" id="search-patient" placeholder="🔍 Search patient..." oninput="renderSchedule()" />
+              <select id="filter-status" onchange="renderSchedule()">
+                <option value="all">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="completed">Completed</option>
+                <option value="overdue">Overdue</option>
+              </select>
+            </div>
+          </div>
+          <div id="schedule-table-wrap">
+            <p class="empty-msg">No schedule data yet. Add a patient first.</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 1.5rem;">
+          <h3 class="card-title">📘 Vaccine Reference Chart</h3>
+          <p style="color:var(--text-muted);margin-bottom:1rem;font-size:0.9rem;">Standard immunization schedule for children</p>
+          <div id="vaccine-ref-chart"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
